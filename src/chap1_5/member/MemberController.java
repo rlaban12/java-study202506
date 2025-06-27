@@ -36,7 +36,7 @@ public class MemberController {
                 showAllMembers();
                 break;
             case "3":
-                System.out.println("\n# 회원 개별조회를 시작합니다.");
+                memberSearch();
                 break;
             case "4":
                 System.out.println("\n# 회원 정보를 수정합니다.");
@@ -60,6 +60,12 @@ public class MemberController {
         }// end switch
 
         prompt("======== 계속하시려면 Enter... =========");
+    }
+
+    void memberSearch() {
+        System.out.println("\n# 회원 개별조회를 시작합니다.");
+
+
     }
 
     void signUp() {
