@@ -9,11 +9,11 @@ public class Member {
     String password;
     String memberName;
     String id; // 인조 식별자 (랜덤값: 시스템이 자동생성)
-    Gender gender;
+    Gender gender; // MALE, FEMALE
     int age;
     LocalDateTime registerDate; // 회원가입 일시
 
-    boolean isDeleted;
+    boolean isDeleted = false;
 
     // 생성자 : 객체가 처음 생성될 때 필드를 초기화
     public Member(int age, String email, String password, String memberName, Gender gender) {
@@ -55,6 +55,14 @@ public class Member {
                 java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         );
         System.out.printf("이름: %s, 이메일: %s, 성별: %s, 나이: %d세, 가입일: %s\n",
-                memberName, email, gender == Gender.MALE ? "남자" : "여자" , age, formattedDate);
+                memberName, email, gender == Gender.MALE ? "남자" : "여자", age, formattedDate);
+    }
+
+    public void updateNewPassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public boolean isPasswordMatch(String inputPassword) {
+        return this.password.equals(inputPassword);
     }
 }

@@ -18,12 +18,16 @@ public class MemberRepository {
     // Member[] => [{ id: '', memberName: '' }, {}, {}]
     Member[] memberList; // 가입된 회원 배열
 
+    Member[] restoreList; // 복구를 위한 배열
+
     MemberRepository() {
         memberList = new Member[] {
                 new Member(15, "abc123@def.com", "1234", "콩벌레", Gender.MALE)
                 , new Member(25, "fff@ggg.com", "5678", "팥죽이", Gender.FEMALE)
                 , new Member(35, "xxx@ccc.com", "9876", "카레빵", Gender.FEMALE)
         };
+
+        restoreList = new Member[0];
 
     }
 
@@ -77,23 +81,83 @@ public class MemberRepository {
      * @since 2025.06.27
      */
     Member findMemberByEmail(String targetEmail) {
-        for (Member member : memberList) {
-            if (targetEmail.equals(member.email)) {
-                return member;
-            }
-        }
-        return null; // 탐색에 실패한 경우
+        int index = findIndexByEmail(targetEmail);
+        return index != -1 ? memberList[index] : null;
     }
 
     /**
+     * 주어진 이메일 주소가 중복되었는지 확인합니다.
+     * 이메일이 중복된 경우 true를 반환하고, 그렇지 않으면 false를 반환합니다.
      *
-     * @param inputEmail
-     * @return
+     * @param inputEmail 확인할 이메일 주소
+     * @return 이메일이 중복된 경우 true, 중복되지 않은 경우 false
      */
     boolean isDuplicateEmail(String inputEmail) {
         return findMemberByEmail(inputEmail) != null;
     }
 
+    int findIndexByEmail(String email) {
+        for (int i = 0; i < memberList.length; i++) {
+            if (memberList[i].email.equals(email)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
+    public void removeMember(String email) {
+        // 삭제 대상의 인덱스를 알아와야 함
+        int index = findIndexByEmail(email);
 
+        // 복구 배열에 백업
+        addRestore(memberList[index]);
+
+        for (int i = index; i < memberList.length - 1; i++) {
+            memberList[i] = memberList[i + 1];
+        }
+        Member[] temp = new Member[memberList.length - 1];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = memberList[i];
+        }
+        memberList = temp;
+    }
+
+    // 회원 목록에 새로운 회원 1명을 추가하는 메서드
+    void addRestore(Member newMember) {
+        // push
+        Member[] temp = new Member[restoreList.length + 1];
+        for (int i = 0; i < restoreList.length; i++) {
+            temp[i] = restoreList[i];
+        }
+        temp[temp.length - 1] = newMember;
+        restoreList = temp;
+    }
+
+    public boolean restore(String inputEmail) {
+        // 복구대상을 탐색하여 복구배열에서 인덱스를 확인한 후
+        int index = -1;
+        for (int i = 0; i < restoreList.length; i++) {
+            if (inputEmail.equals(restoreList[i].email)) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            return false;
+        }
+
+        // 원본 회원 배열에 추가
+        addMember(restoreList[index]);
+
+        // 복구배열에서 제거 후
+        for (int i = index; i < restoreList.length - 1; i++) {
+            restoreList[i] = restoreList[i + 1];
+        }
+        Member[] temp = new Member[restoreList.length - 1];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = restoreList[i];
+        }
+        restoreList = temp;
+        return true;
+    }
 }
