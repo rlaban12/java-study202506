@@ -22,5 +22,10 @@ public class Main {
 
         Object[] arr = {1, "dfad", false, new Sonata()};
 
+        System.out.println("=============");
+
+
+
+
     }
 }
