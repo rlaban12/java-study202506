@@ -1,5 +1,7 @@
 package chap1_5.member;
 
+import chap1_9.static_.util.InputUtils;
+
 import java.util.Scanner;
 
 // 역할: 회원관리 앱의 입출력을 담당
@@ -122,11 +124,11 @@ public class MemberController {
         String password = prompt("# 패스워드: ");
         String memberName = prompt("# 이름: ");
         Gender gender = inputCorrectGender();
-        String ageStr = prompt("# 나이: ");
+        int age = InputUtils.promptInt("# 나이: ");
 
         // 회원 배열에 추가
         mr.addMember(new Member(
-                Integer.parseInt(ageStr),
+                age,
                 email,
                 password,
                 memberName,
